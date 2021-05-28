@@ -27,6 +27,7 @@ export default function ({ onEventAdded }) {
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
   const [coment, setComent] = useState("");
+  const [url, setUrl] = useState("")
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   console.log(onEventAdded)
@@ -37,6 +38,7 @@ export default function ({ onEventAdded }) {
     setStart(new Date());
     setEnd(new Date());
     setComent("");
+    setUrl("");
   }, [open]);
 
   const handleClickOpen = () => {
@@ -57,6 +59,7 @@ export default function ({ onEventAdded }) {
       start,
       end,
       coment,
+      url,
     };
     onEventAdded(_calendaio);
     handleClose();
@@ -113,6 +116,15 @@ export default function ({ onEventAdded }) {
               defaultValue="Default Value"
               value={coment}
               onChange={handleChange}
+            />
+            <TextField
+              id="standard-multiline-static"
+              label="url foda-se"
+              multiline
+              rows={5}
+              defaultValue="Default Value"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
             />
           </Grid>
         </MuiPickersUtilsProvider>

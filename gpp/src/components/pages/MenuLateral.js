@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import CollapsibleTable from './TabelaTodo';
+import { Table, TableCell, TableContainer, TableHead, TableRow, Paper, TableBody } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -28,11 +29,32 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
+ function createData(lista) {
+   let novaArray = [];
+  lista.forEach(element => {
+    var comentario = element.extendedProps.coment;
+    novaArray.push({
+      id: element.id,
+      title: element.title,
+      url: element.url,
+      coment: comentario,
+      start: element.startStr,
+      end: element.endStr,
+    })
+  });  
+  return (
+   novaArray
+  )
+};
+
 export default function MenuLateral({lista, calendarRef}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-console.log(lista)
-console.log(calendarRef)
+  const [novaLista, setNovaLista] = useState(createData(lista));
+// console.log(lista)
+// console.log(calendarRef)
+createData(lista)
+console.log(novaLista)
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -40,6 +62,12 @@ console.log(calendarRef)
   const handleClose = () => {
     setOpen(false);
   };
+
+
+
+  const rows = [
+
+  ];
 
   return (
     <div>
@@ -68,6 +96,33 @@ console.log(calendarRef)
           </ListItem>
           {/* <CollapsibleTable /> */}
         </List>
+        <TableContainer component={Paper}>
+      <Table aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Titulos das marcações</TableCell>
+            <TableCell>comentario</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {/* {rows.map((row) => (
+            <Row key={row.name} row={row} />
+          ))} */}
+          {novaLista.map((row) => (
+            <TableRow key={row.title}>
+              <TableCell component="th" scope="row">
+                {row.title}
+              </TableCell>
+              {/* <TableCell align="right">{row.calories}</TableCell>
+              <TableCell align="right">{row.fat}</TableCell>
+              <TableCell align="right">{row.carbs}</TableCell>
+              <TableCell align="right">{row.protein}</TableCell> */}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
       </Dialog>
     </div>
   );

@@ -30,9 +30,9 @@ import Header from "../../Header";
 import Calendario from "../../Calendario";
 import momentPlugin from "@fullcalendar/moment";
 import ptLocale from "@fullcalendar/core/locales/pt-br";
-import MenuLateral from "../MenuLateral";
+import  MenuLateral from "../MenuLateral";
+
 import axios from "axios";
-import {INITIAL_STATE} from "../../../utils/utlis";
 
 function handleSubmit(event) {
   //console.log(event)
@@ -78,8 +78,9 @@ function Home() {
   const [open, setOpen] = useState(false);
   const [selecionado, setSelecionado] = useState("");
   //console.log(selecionado);
-  console.log(calendarRef)
-const [lista, setlista] = useState([])
+  //console.log(calendarRef)
+const [lista, setlista] = useState([]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -148,10 +149,11 @@ const [lista, setlista] = useState([])
     // setLista(events)
   };
 
+  let urls = null;
   // função para remover uma data
   const dialogEventClickDelete = (clickInfo) => {
     var infoObj = clickInfo.event;
-    console.log(clickInfo.event.extendedProps);
+    console.log(clickInfo.event);
     var comentario = infoObj.extendedProps.coment;
     const eventsss = {
       id: infoObj.id,
@@ -166,6 +168,14 @@ const [lista, setlista] = useState([])
     setSelecionado(eventsss);
     handleClickOpen();
     clickInfo.jsEvent.preventDefault();
+  };
+
+  if(selecionado.url){
+    urls = (
+      <Typography variant="h7" color="textPrimary">
+        Algum site: {selecionado.url}
+      </Typography>
+    )
   };
 
   const handleEventClickDelete = () => {
@@ -198,6 +208,7 @@ const [lista, setlista] = useState([])
         <Typography variant="h7" color="textPrimary">
           Informação: {selecionado.coment}
         </Typography>
+        {urls}
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancelar
