@@ -40,7 +40,7 @@ function Header({ darkMode, setDarkMode }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h3" color="textPrimary">
-            Teste site do GPP
+            Projeto do GPP
           </Typography>
           {/* <FormControlLabel
             control={

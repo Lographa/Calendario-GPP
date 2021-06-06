@@ -3,12 +3,6 @@ import {
   Box,
   Toolbar,
   Button,
-  List,
-  Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Drawer,
   Dialog,
   DialogActions,
   DialogContent,
@@ -30,28 +24,9 @@ import Header from "../../Header";
 import Calendario from "../../Calendario";
 import momentPlugin from "@fullcalendar/moment";
 import ptLocale from "@fullcalendar/core/locales/pt-br";
-import  MenuLateral from "../MenuLateral";
+import MenuLateral from "../MenuLateral";
 
 import axios from "axios";
-
-function handleSubmit(event) {
-  //console.log(event)
-  fetch("https://8cg22.sse.codesandbox.io/calendar", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      coment: event.coment,
-    }),
-  }).then((response) => response.json());
-  // .then((response) => {
-  //   console.log(event);
-  // });
-}
 
 function handleSubmitGet(event) {
   // const request = new XMLHttpRequest()
@@ -66,7 +41,7 @@ function handleSubmitGet(event) {
   })
     .then((response) => response.json())
     .then((response) => {
-      console.log(response.resposta);
+      //  console.log(response.resposta);
       return (event = response.data);
     });
 }
@@ -77,9 +52,9 @@ function Home() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [selecionado, setSelecionado] = useState("");
-  //console.log(selecionado);
-  //console.log(calendarRef)
-const [lista, setlista] = useState([]);
+
+  const [lista, setlista] = useState([]);
+  const [Rsposta, setRsposta] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -89,41 +64,38 @@ const [lista, setlista] = useState([]);
     setOpen(false);
   };
 
-  // useEffect(() => {
-  //   handleGetEvent();
-  // }, [])
-
-  // teste para ve se o events do calendar recebe uma arrays
-  // const valorqualquer = [
-  //   { id: "100", title: "event 1", start: "2021-05-12", end: "2021-05-13" },
-  //   {
-  //     title: "event 2",
-  //     start: "2021-05-14",
-  //     end: "2021-05-16",
-  //     coment: "qualquer texto visivel",
-  //   },
-  //   {
-  //     title: "event com url",
-  //     start: "2021-05-16",
-  //     end: "2021-05-17",
-  //     url: "https://www.youtube.com/",
-  //   },
-  // ];
+  useEffect(() => {
+    handleGetEvent();
+  }, []);
 
   // metodo de API do calendario
-  const onEventAdded = (event) => {
-    let calendarApi = calendarRef.current.getApi();
-    handleSubmit(event);
-    calendarApi.addEvent(event);
-    //console.log(event);
+  const onEventAdded = async (event) => {
+    const responsePost = {
+      title: event.title,
+      start: event.start,
+      end: event.end,
+      coment: event.coment,
+    };
+    JSON.stringify(responsePost);
+    const response = await axios.post(
+      "https://8cg22.sse.codesandbox.io/calendar",
+      responsePost
+    );
+    setEvents(response.data.resposta);
   };
 
   const handleGetEvent = async () => {
+    let novaArray = [];
     const response = await axios.get(
       "https://8cg22.sse.codesandbox.io/calendar"
     );
     setEvents(response.data.resposta);
-    //console.log(events);
+    events.forEach((element) => {
+      novaArray.push({
+        id: element.id,
+      });
+    });
+    setRsposta(novaArray);
   };
 
   // metodo teste para criar evento ao clicar na data escolhida
@@ -144,16 +116,13 @@ const [lista, setlista] = useState([]);
 
   // eventsSet={handleEvents} EVENTSSET
   const handleEvents = (events) => {
-    setlista(events)
-    // console.log(events);
-    // setLista(events)
+    setlista(events);
   };
 
   let urls = null;
   // função para remover uma data
   const dialogEventClickDelete = (clickInfo) => {
     var infoObj = clickInfo.event;
-    console.log(clickInfo.event);
     var comentario = infoObj.extendedProps.coment;
     const eventsss = {
       id: infoObj.id,
@@ -163,28 +132,33 @@ const [lista, setlista] = useState([]);
       start: infoObj.startStr,
       end: infoObj.endStr,
     };
-    //console.log(eventsss);
-    clickInfo.jsEvent.preventDefault();
     setSelecionado(eventsss);
     handleClickOpen();
     clickInfo.jsEvent.preventDefault();
   };
 
-  if(selecionado.url){
+  if (selecionado.url) {
     urls = (
       <Typography variant="h7" color="textPrimary">
         Algum site: {selecionado.url}
       </Typography>
-    )
-  };
+    );
+  }
 
-  const handleEventClickDelete = () => {
-    let calendarApi = calendarRef.current.getApi();
-    const novos = calendarApi.getEvents();
-    let retorna = novos.find((element) => element.id == selecionado.id);
-    retorna.remove();
-    handleClose();
-    //retorna.jsEvent.preventDefault();
+  const handleEventClickDelete = async () => {
+    try {
+      let calendarApi = calendarRef.current.getApi();
+      const novos = calendarApi.getEvents();
+      let retorna = novos.find((element) => element.id == selecionado.id);
+      console.log(retorna);
+
+      console.log(selecionado.id);
+      const resposta = await axios.delete(
+        "https://8cg22.sse.codesandbox.io/calendar" + "?id=" + selecionado.id
+      );
+      retorna.remove();
+      handleClose();
+    } catch (erro) {}
   };
 
   const CaixaDeInfo = (
@@ -237,13 +211,7 @@ const [lista, setlista] = useState([]);
     </div> */}
 
         <section>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            
-          >
+          <Grid container direction="row" justify="center" alignItems="center">
             {/* butao sendo testado para obter evento por id */}
             <Button
               variant="contained"
@@ -268,24 +236,20 @@ const [lista, setlista] = useState([]);
               Testar o axios
             </Button>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            
-          >
+          <Grid container direction="row" justify="center" alignItems="center">
             <MenuLateral lista={lista} calendarRef={calendarRef} />
             <Calendario onEventAdded={(event) => onEventAdded(event)} />
           </Grid>
 
           {/* ABAIXO ESTÁ TODO FULLCALENDAR */}
           <div style={{ position: "relative", zIndex: 0 }}>
+            {" "}
+            {/*  para colocar o tamanho  width: "1300px" */}
             <FullCalendar
-              header={{
-                left: "prev,next today",
+              headerToolbar={{
+                left: "prevYear prev,next nextYear today",
                 center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+                right: "dayGridMonth timeGridWeek timeGridDay listWeek",
               }}
               plugins={[
                 dayGridPlugin,
@@ -293,6 +257,7 @@ const [lista, setlista] = useState([]);
                 interactionPlugin,
                 momentPlugin,
               ]}
+              contentHeight={650} // altura dos quadrados das datas
               locale={ptLocale}
               eventClick={dialogEventClickDelete}
               ref={calendarRef}
@@ -300,9 +265,8 @@ const [lista, setlista] = useState([]);
               editable={true}
               selectable={true}
               select={handleDateSelect}
-              // events={valorqualquer}
+              events={events}
               eventsSet={handleEvents}
-              // eventsAdd={(e) =>console.log(e.coment)}
             />
           </div>
 

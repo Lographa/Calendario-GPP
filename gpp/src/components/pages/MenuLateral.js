@@ -54,7 +54,7 @@ export default function MenuLateral({lista, calendarRef}) {
 // console.log(lista)
 // console.log(calendarRef)
 createData(lista)
-console.log(novaLista)
+//console.log(novaLista)
   const handleClickOpen = () => {
     setOpen(true);
   };

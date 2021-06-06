@@ -30,7 +30,7 @@ export default function ({ onEventAdded }) {
   const [url, setUrl] = useState("")
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  console.log(onEventAdded)
+  //console.log(onEventAdded)
 
   // limpa estado
   useEffect(() => {
