@@ -1,9 +1,15 @@
 import { makeStyles } from "@material-ui/core";
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       backgroundColor: theme.palette.background.dark,
       height: "100vh",
+    },
+    root1: {
+      "& > *": {
+        margin: theme.spacing(1),
+      },
     },
     AppBar: {
       minHeight: 50,
@@ -42,6 +48,14 @@ const useStyles = makeStyles((theme) => ({
     },
     calendario: {
       paddingTop: theme.spacing(22)
+    },
+    orange: {
+      color: theme.palette.getContrastText(deepOrange[500]),
+      backgroundColor: deepOrange[500],
+    },
+    purple: {
+      color: theme.palette.getContrastText(deepPurple[500]),
+      backgroundColor: deepPurple[500],
     },
   }));
 

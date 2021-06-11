@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  
 }));
 
 export default function ({ onEventAdded }) {
@@ -28,7 +29,6 @@ export default function ({ onEventAdded }) {
   const [end, setEnd] = useState(new Date());
   const [coment, setComent] = useState("");
   const [url, setUrl] = useState("")
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   //console.log(onEventAdded)
 
@@ -82,7 +82,7 @@ export default function ({ onEventAdded }) {
           <Grid container justify="space-around">
             <KeyboardDatePicker
               disableToolbar
-              variant="inline"
+              margin="normal"
               format="dd/MM/yyyy"
               margin="normal"
               id="date-picker-inline"
@@ -97,7 +97,7 @@ export default function ({ onEventAdded }) {
           <Grid container justify="space-around">
             <KeyboardDatePicker
               disableToolbar
-              variant="inline"
+              margin="normal"
               format="dd/MM/yyyy"
               margin="normal"
               id="date-picker-inline"
@@ -117,7 +117,7 @@ export default function ({ onEventAdded }) {
               value={coment}
               onChange={handleChange}
             />
-            <TextField
+            {/* <TextField
               id="standard-multiline-static"
               label="url foda-se"
               multiline
@@ -125,7 +125,7 @@ export default function ({ onEventAdded }) {
               defaultValue="Default Value"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-            />
+            /> */}
           </Grid>
         </MuiPickersUtilsProvider>
 

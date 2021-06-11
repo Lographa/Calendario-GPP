@@ -14,6 +14,7 @@ import GuestRoute from "./routes/GuestRoute";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 import store from './store';
+import CadastroForm from './components/pages/Cadastro/CadastroForm';
 
 import './mock';
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <GuestRoute path="/sign-in" element={<SignIn />} />
           <Route path="*" element={<h1>nenhuma pagina</h1>} />
+          <Route path="/cadastrar" element={<CadastroForm />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

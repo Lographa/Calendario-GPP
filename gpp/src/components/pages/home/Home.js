@@ -28,24 +28,6 @@ import MenuLateral from "../MenuLateral";
 
 import axios from "axios";
 
-function handleSubmitGet(event) {
-  // const request = new XMLHttpRequest()
-
-  // request.open("GET", "https://8cg22.sse.codesandbox.io/calendar")
-  // console.log(request)
-
-  fetch("https://8cg22.sse.codesandbox.io/calendar?id=1", {
-    method: "GET",
-    mode: "cors",
-    cache: "default",
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      //  console.log(response.resposta);
-      return (event = response.data);
-    });
-}
-
 function Home() {
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
@@ -102,11 +84,13 @@ function Home() {
   const handleDateSelect = (selectInfo) => {
     let title = prompt("De um nome para o evento ");
     let calendarApi = selectInfo.view.calendar;
+    let coment = prompt("Comente esse evento ");
     calendarApi.unselect(); // limpa data selecionada
 
     if (title) {
       calendarApi.addEvent({
         title: title,
+        coment: coment,
         start: selectInfo.startStr,
         end: selectInfo.endStr,
         allDay: selectInfo.allDay,
@@ -123,14 +107,15 @@ function Home() {
   // função para remover uma data
   const dialogEventClickDelete = (clickInfo) => {
     var infoObj = clickInfo.event;
+    console.log(infoObj.start)
     var comentario = infoObj.extendedProps.coment;
     const eventsss = {
       id: infoObj.id,
       title: infoObj.title,
       url: infoObj.url,
       coment: comentario,
-      start: infoObj.startStr,
-      end: infoObj.endStr,
+      start: infoObj.start,
+      end: infoObj.end,
     };
     setSelecionado(eventsss);
     handleClickOpen();
@@ -144,7 +129,7 @@ function Home() {
       </Typography>
     );
   }
-
+  
   const handleEventClickDelete = async () => {
     try {
       let calendarApi = calendarRef.current.getApi();
@@ -160,7 +145,7 @@ function Home() {
       handleClose();
     } catch (erro) {}
   };
-
+  // caixa que abre ao selecionar uma data ja criada
   const CaixaDeInfo = (
     <div>
       <Dialog
@@ -173,11 +158,12 @@ function Home() {
         <DialogTitle id="alert-dialog-slide-title">
           {selecionado.title}
         </DialogTitle>
-        <DialogContent dividers>
-          <DialogContentText id="alert-dialog-slide-description"></DialogContentText>
-        </DialogContent>
-        <Typography variant="h7" color="textPrimary">
-          Marcado: {selecionado.start} {selecionado.end}
+        
+        <Typography variant="button" color="textPrimary">
+          Marcado: {selecionado.start ? ((selecionado.start.getDate() )) + "/" + ((selecionado.start.getMonth() + 1)) + "/" + selecionado.start.getFullYear() : ""}
+        </Typography>
+        <Typography variant="button" color="textPrimary">
+          Marcado: {selecionado.end ? ((selecionado.end.getDate() )) + "/" + ((selecionado.end.getMonth() + 1)) + "/" + selecionado.end.getFullYear() : ""}
         </Typography>
         <Typography variant="h7" color="textPrimary">
           Informação: {selecionado.coment}
@@ -213,14 +199,14 @@ function Home() {
         <section>
           <Grid container direction="row" justify="center" alignItems="center">
             {/* butao sendo testado para obter evento por id */}
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={handleUpdateEvent}
             >
               visualizar por id
             </Button>
-            {/* comando de fetch para puxar do backend */}
+            {/* comando de fetch para puxar do backend 
             <Button
               variant="contained"
               color="primary"
@@ -234,11 +220,13 @@ function Home() {
               onClick={() => handleGetEvent()}
             >
               Testar o axios
-            </Button>
+            </Button> */}
           </Grid>
           <Grid container direction="row" justify="center" alignItems="center">
+            <div className={classes.root1} >
             <MenuLateral lista={lista} calendarRef={calendarRef} />
             <Calendario onEventAdded={(event) => onEventAdded(event)} />
+            </div>
           </Grid>
 
           {/* ABAIXO ESTÁ TODO FULLCALENDAR */}
@@ -249,7 +237,7 @@ function Home() {
               headerToolbar={{
                 left: "prevYear prev,next nextYear today",
                 center: "title",
-                right: "dayGridMonth timeGridWeek timeGridDay listWeek",
+                right: "dayGridMonth timeGridWeek timeGridDay",
               }}
               plugins={[
                 dayGridPlugin,
